@@ -3,12 +3,13 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
+import RootProviders from "@/components/providers/RootProviders";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
 	title: "CashFlow",
-	description: "Your personal finance assistant",
+	description: "Your personal Finance Assistant",
 };
 
 export default function RootLayout({
@@ -18,8 +19,12 @@ export default function RootLayout({
 }) {
   return (
 		<ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
-			<html lang="en">
-				<body className={inter.className}>{children}</body>
+			<html lang="en" className="dark" style={{ colorScheme: "dark" }}>
+				<body className={inter.className}>
+					<RootProviders>
+						{children}
+					</RootProviders>
+				</body>
 			</html>
 		</ClerkProvider>
 	);
