@@ -2,7 +2,7 @@
 "use server"
 
 import { currentUser } from "@clerk/nextjs/server"
-import { UpdateUserCurrencySchema } from "../../../../schema/userSettings"
+import { UpdateUserCurrencySchema } from "../../../schema/userSettings"
 import { redirect } from "next/navigation"
 import prisma from "../../../lib/prisma"
 

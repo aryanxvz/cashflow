@@ -1,6 +1,6 @@
 
 import { z } from "zod"
-import { Currencies } from "../src/lib/currency"
+import { Currencies } from "../lib/currency"
 
 export const UpdateUserCurrencySchema = z.object({
     currency: z.custom(value => {
