@@ -26,7 +26,7 @@ export default async function page() {
         <div className="h-full bg-background">
             <div className="border-b bg-card">
                 <div className="conatiner flex flex-wrap items-center justify-between gap-6 py-6 px-12">
-                    <p className="font-bold text-3xl">Hello, {user.firstName}!</p>
+                    <p className="font-bold text-2xl">Hello, {user.firstName}!</p>
                     <div className="flex items-center gap-3">
                         <CreateTransactionDialog trigger={
                             <Button variant={"outline"} className="border-emerald-500 bg-emerald-950 hover:bg-emerald-700 text-white hover:text-white">New Income</Button>
