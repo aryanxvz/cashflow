@@ -28,7 +28,7 @@ export default function StatsCards({ from, to , userSettings }: Props) {
     }, [userSettings.currency])
 
     const income = statsQuery.data?.income || 0
-    const expense = statsQuery.data?.income || 0
+    const expense = statsQuery.data?.expense || 0
     console.log(expense)
 
     const balance = income - expense
