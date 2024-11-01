@@ -87,7 +87,7 @@ function CategoriesCard({ type, formatter, data }: {
                                         <div className="flex items-center justify-between">
                                             <span className="flex items-center text-gray-400">
                                                 {item.categoryIcon}{item.category}
-                                                <span className="ml-2 text-xs text-muted-foreground">
+                                                <span className="ml-2 text-sm text-muted-foreground">
                                                     ({percentage.toFixed(0)}%)
                                                 </span>
                                             </span>
