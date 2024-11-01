@@ -29,11 +29,12 @@ export default function StatsCards({ from, to , userSettings }: Props) {
 
     const income = statsQuery.data?.income || 0
     const expense = statsQuery.data?.income || 0
+    console.log(expense)
 
     const balance = income - expense
 
     return (
-        <div className="relative flex w-full flex-wrap gap-2 md: md:flex-nowrap">
+        <div className="relative flex w-full flex-wrap gap-2 md:flex-nowrap">
             <SkeletonWrapper isLoading={statsQuery.isFetching}>
                 <StatsCard 
                     formatter = { formatter }
