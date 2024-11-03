@@ -76,7 +76,7 @@ function MobileNavbar() {
 const items = [
     {label: "Dashboard", link: "/"},
     {label: "Transactions", link: "/transactions"},
-    {label: "Manage", link: "/transactions"}
+    {label: "Manage", link: "/manage"}
 ]
 
 function NavBarItem({ link, label, clickCallback }: { link: string, label: string, clickCallback?: () => void }){

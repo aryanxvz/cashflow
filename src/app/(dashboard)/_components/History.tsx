@@ -87,10 +87,6 @@ export default function History({ userSettings }: { userSettings: UserSettings }
                                 <div className="h-4 w-4 rounded-full bg-red-500"></div>
                                 Expense
                             </Badge>
-                            <Badge variant="outline" className="flex items-center gap-2 text-sm">
-                                <div className="h-4 w-4 rounded-full bg-blue-500"></div>
-                                Balance
-                            </Badge>
                         </div>
                     </CardTitle>
                 </CardHeader>
@@ -160,7 +156,7 @@ export default function History({ userSettings }: { userSettings: UserSettings }
                                                             </span>
                                                         </p>
                                                         <p className="text-sm">
-                                                            <span className="text-blue-500">
+                                                            <span className="text-violet-400">
                                                                 Balance: {formatter.format(data.balance || 0)}
                                                             </span>
                                                         </p>
