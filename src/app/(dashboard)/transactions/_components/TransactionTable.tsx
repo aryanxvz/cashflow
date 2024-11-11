@@ -1,4 +1,3 @@
-
 "use client"
 import { GetTransactionsHistoryResponseType } from "@/app/api/transaction-history/route"
 import { DataTableColumnHeader } from "@/components/datatable/columnHeader"
@@ -14,7 +13,7 @@ import { ColumnDef, ColumnFiltersState, flexRender, getCoreRowModel, getFiltered
 import { useMemo, useState } from "react"
 import { generateCsv, download, mkConfig } from "export-to-csv"
 import { DownloadIcon, MoreHorizontal, TrashIcon } from "lucide-react"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import DeleteTransactionDialog from "./DeleteTransactionDialog"
 
 interface Props {
@@ -36,7 +35,7 @@ const columns: ColumnDef<TransactionHistoryRow>[] = [
             return value.includes(row.getValue(id))
         },
         cell: ({ row }) => (
-            <div className="capitalize">
+            <div className="capitalize font-medium min-w-[150px] py-2">
                 {row.original.category}
             </div>
         )
@@ -47,20 +46,22 @@ const columns: ColumnDef<TransactionHistoryRow>[] = [
             <DataTableColumnHeader column={column} title="Description" />
         ),
         cell: ({ row }) => (
-            <div className="capitalize">
+            <div className="capitalize text-sm text-gray-600 dark:text-gray-300 min-w-[200px] py-2">
                 {row.original.description}
             </div>
         )
     },
     {
         accessorKey: "date",
-        header: "Date",
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Date" />
+        ),
         cell: ({ row }) => {
             const date = new Date(row.original.date)
             const formattedDate = date.toLocaleDateString("default", {
                 timeZone: "UTC", year: "numeric", month: "2-digit", day: "2-digit"
             })
-            return <div className="text-muted-foreground">
+            return <div className="text-sm text-muted-foreground min-w-[150px] whitespace-nowrap py-2">
                 {formattedDate}
             </div>
         }
@@ -71,9 +72,9 @@ const columns: ColumnDef<TransactionHistoryRow>[] = [
             <DataTableColumnHeader column={column} title="Type" />
         ),
         cell: ({ row }) => (
-            <div className={cn("capitalize rounded-lg text-center p-2", 
-                row.original.type === "Income" && "bg-emerald-500/10 text-emerald-500",
-                row.original.type === "Expense" && "bg-red-500/10 text-red-500")}>
+            <div className={cn("capitalize text-sm font-medium px-3 py-1 rounded-md w-24 min-w-[150px] text-center",
+                row.original.type === "Income" && "bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400",
+                row.original.type === "Expense" && "bg-red-500/10 text-red-600 dark:bg-red-500/20 dark:text-red-400")}>
                 {row.original.type}
             </div>
         )
@@ -84,21 +85,23 @@ const columns: ColumnDef<TransactionHistoryRow>[] = [
             <DataTableColumnHeader column={column} title="Amount" />
         ),
         cell: ({ row }) => (
-            <p className="text-md rounded-lg bg-gray-400/5 p-2 text-center font-medium">
+            <div className={cn("text-sm font-semibold whitespace-nowrap py-2 rounded-lg w-32 text-left px-2",
+                row.original.type === "Income" ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"
+            )}>
                 {row.original.formatterdAmount}
-            </p>
+            </div>
         )
     },
     {
         id: "actions",
-    header: "Actions",
-    enableHiding: false,
-    cell: ({ row }) => (
-      <div className="flex justify-end">
-        <RowActions transaction={row.original} />
-      </div>
-    ),
-    size: 100,
+        header: "Actions",
+        enableHiding: false,
+        size: 5,
+        cell: ({ row }) => (
+            <div className="w-8 ml-2">
+                <RowActions transaction={row.original} />
+            </div>
+        ),
     }
 ]
 
@@ -150,17 +153,17 @@ export default function TransactionTable({from, to}: Props) {
     }, [history.data])
 
     return (
-        <div className="w-full">
-            <div className="flex justify-between items-end flex-wrap gap-2 py-4">
-                <div className="flex gap-2">
-                    { table.getColumn("category") && (
+        <div className="w-full space-y-4 pt-4">
+            <div className="flex justify-between items-center flex-wrap gap-4">
+                <div className="flex flex-wrap items-center gap-2">
+                    {table.getColumn("category") && (
                         <DataTableFacetedFilter
                             title="Category"
                             column={table.getColumn("category")}
                             options={categoriesOptions}
                         />
                     )}
-                    { table.getColumn("type") && (
+                    {table.getColumn("type") && (
                         <DataTableFacetedFilter
                             title="Type"
                             column={table.getColumn("type")}
@@ -171,8 +174,11 @@ export default function TransactionTable({from, to}: Props) {
                         />
                     )}
                 </div>
-                <div className="flex flex-wrap gap-2">
-                    <Button variant={"outline"} size={"sm"} className="ml-auto h-8 lg:flex"
+                <div className="flex items-center gap-2">
+                    <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="h-8 px-3 flex items-center gap-2"
                         onClick={() => {
                             const data = table.getFilteredRowModel().rows.map(row => ({
                                 category: row.original.category,
@@ -183,70 +189,76 @@ export default function TransactionTable({from, to}: Props) {
                                 date: row.original.date,
                             }))
                             handleExportCSV(data)
-                        }}>
-                        <DownloadIcon className="h-4 w-4 mr-2" /> Export CSV
+                        }}
+                    >
+                        <DownloadIcon className="h-4 w-4" />
+                        Export CSV
                     </Button>
                     <DataTableViewOptions table={table} />
                 </div>
             </div>
+            
             <SkeletonWrapper isLoading={history.isFetching}>
-                <div className="rounded-md border">
+                <div className="rounded-lg border shadow-sm bg-white dark:bg-zinc-950">
                     <Table>
                         <TableHeader>
-                        {table.getHeaderGroups().map((headerGroup) => (
-                            <TableRow key={headerGroup.id}>
-                            {headerGroup.headers.map((header) => {
-                                return (
-                                <TableHead key={header.id}>
-                                    {header.isPlaceholder
-                                    ? null
-                                    : flexRender(
-                                        header.column.columnDef.header,
-                                        header.getContext()
-                                        )}
-                                </TableHead>
-                                )
-                            })}
-                            </TableRow>
-                        ))}
+                            {table.getHeaderGroups().map((headerGroup) => (
+                                <TableRow key={headerGroup.id} className="hover:bg-transparent">
+                                    {headerGroup.headers.map((header) => (
+                                        <TableHead key={header.id} className="h-11 px-4 text-sm font-medium text-gray-500 dark:text-gray-400">
+                                            {header.isPlaceholder
+                                                ? null
+                                                : flexRender(
+                                                    header.column.columnDef.header,
+                                                    header.getContext()
+                                                )}
+                                        </TableHead>
+                                    ))}
+                                </TableRow>
+                            ))}
                         </TableHeader>
                         <TableBody>
-                        {table.getRowModel().rows?.length ? (
-                            table.getRowModel().rows.map((row) => (
-                            <TableRow
-                                key={row.id}
-                                data-state={row.getIsSelected() && "selected"}
-                            >
-                                {row.getVisibleCells().map((cell) => (
-                                <TableCell key={cell.id}>
-                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                </TableCell>
-                                ))}
-                            </TableRow>
-                            ))
-                        ) : (
-                            <TableRow>
-                            <TableCell colSpan={columns.length} className="h-24 text-center">
-                                No results.
-                            </TableCell>
-                            </TableRow>
-                        )}
+                            {table.getRowModel().rows?.length ? (
+                                table.getRowModel().rows.map((row) => (
+                                    <TableRow
+                                        key={row.id}
+                                        data-state={row.getIsSelected() && "selected"}
+                                        className="hover:bg-gray-50 dark:hover:bg-gray-700/50"
+                                    >
+                                        {row.getVisibleCells().map((cell) => (
+                                            <TableCell key={cell.id} className="py-3">
+                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell colSpan={columns.length} className="h-24 text-center text-sm text-gray-500 dark:text-gray-400">
+                                        No transactions found.
+                                    </TableCell>
+                                </TableRow>
+                            )}
                         </TableBody>
                     </Table>
                 </div>
-                <div className="flex items-center justify-end space-x-2 py-4">
+                <div className="flex items-center justify-end space-x-2">
                     <Button
                         variant="outline"
                         size="sm"
                         onClick={() => table.previousPage()}
-                        disabled={!table.getCanPreviousPage()}>
+                        disabled={!table.getCanPreviousPage()}
+                        className="h-8 px-4"
+                    >
                         Previous
                     </Button>
                     <Button
                         variant="outline"
                         size="sm"
                         onClick={() => table.nextPage()}
-                        disabled={!table.getCanNextPage()}>
+                        disabled={!table.getCanNextPage()}
+                        className="h-8 px-4"
+                    >
                         Next
                     </Button>
                 </div>
@@ -260,22 +272,22 @@ function RowActions({transaction}: {transaction: TransactionHistoryRow}) {
 
     return (
         <>
-        <DeleteTransactionDialog open={showDeleteDialog} setOpen={setShowDeleteDialog} transactionId={transaction.id} />
+            <DeleteTransactionDialog open={showDeleteDialog} setOpen={setShowDeleteDialog} transactionId={transaction.id} />
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant={"ghost"} className="h-8 p-0 w-8">
-                        <span className="sr-only">Open Menu</span>
-                        <MoreHorizontal className="h-4 w-4" />
+                    <Button 
+                        variant="ghost" 
+                        className="h-8 w-8 p-0 hover:bg-transparent"
+                    >
+                        <MoreHorizontal className="h-4 w-4 text-gray-500" />
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem className="flex items-center gap-2"
-                        onSelect={() => {
-                            setShowDeleteDialog((prev) => !prev)
-                        }}>
-                        <TrashIcon className="h-4 w-4 text-muted-foreground" />
+                <DropdownMenuContent align="end" className="w-40">
+                    <DropdownMenuItem 
+                        className="flex items-center gap-2 cursor-pointer text-red-600 dark:text-red-400"
+                        onSelect={() => setShowDeleteDialog(true)}
+                    >
+                        <TrashIcon className="h-4 w-4" />
                         Delete
                     </DropdownMenuItem>
                 </DropdownMenuContent>

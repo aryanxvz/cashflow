@@ -40,7 +40,7 @@ export default function StatsCards({ from, to , userSettings }: Props) {
                     formatter = { formatter }
                     value = {income}
                     title = "Income"
-                    icon = { <TrendingUp className="h-12 w-12 items-center rounded-lg p-2 mx-2 2xl:mx-4 text-emerald-500 bg-emerald-400/10"/> }
+                    icon = { <TrendingUp className="h-12 w-12 items-center rounded-lg p-2 mx-2 2xl:mx-4 text-emerald-700 bg-emerald-600/10 dark:text-emerald-500 dark:bg-emerald-400/10"/> }
                 />
             </SkeletonWrapper>
 
@@ -49,7 +49,7 @@ export default function StatsCards({ from, to , userSettings }: Props) {
                     formatter = { formatter }
                     value = {expense}
                     title = "Expense"
-                    icon = { <TrendingDown className="h-12 w-12 items-center rounded-lg p-2 mx-2 2xl:mx-4 text-red-500 bg-red-400/10"/> }
+                    icon = { <TrendingDown className="h-12 w-12 items-center rounded-lg p-2 mx-2 2xl:mx-4 text-red-700 bg-red-600/10 dark:text-red-500 dark:bg-red-400/10"/> }
                 />
             </SkeletonWrapper>
 
@@ -58,7 +58,7 @@ export default function StatsCards({ from, to , userSettings }: Props) {
                     formatter = { formatter }
                     value = {balance}
                     title = "Balance"
-                    icon = { <Wallet className="h-12 w-12 items-center rounded-lg p-2 mx-2 2xl:mx-4 text-violet-500 bg-violet-400/10"/> }
+                    icon = { <Wallet className="h-12 w-12 items-center rounded-lg p-2 mx-2 2xl:mx-4 text-violet-700 bg-violet-600/10 dark:text-violet-500 dark:bg-violet-400/10"/> }
                 />
             </SkeletonWrapper>
         </div>
