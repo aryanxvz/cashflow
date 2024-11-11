@@ -28,7 +28,7 @@ export default function CategoriesStats({ userSettings, from, to }: Props) {
     }, [userSettings.currency])
 
     return (
-        <div className="flex w-full flex-wrap gap-2 md:flex-nowrap">
+        <div className="flex w-full flex-wrap gap-2 md:flex-nowrap pt-2 lg:pt-0">
             <SkeletonWrapper isLoading={statsQuery.isFetching}>
                 <CategoriesCard 
                     formatter={formatter}
