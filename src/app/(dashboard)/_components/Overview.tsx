@@ -1,6 +1,6 @@
 "use client"
 import { UserSettings } from "@prisma/client"
-import { differenceInDays, endOfDay, startOfDay, startOfMonth } from "date-fns"
+import { differenceInDays, startOfMonth, startOfDay, endOfDay } from "date-fns"
 import React, { useState } from "react"
 import { DateRangePicker } from "@/components/ui/date-range-picker"
 import { MAX_DATE_RANGE_DAYS } from "@/lib/constant"
@@ -10,6 +10,7 @@ import CategoriesStats from "./CategoreiesStats"
 import { DateToUTCDate } from "@/lib/helpers"
 
 export default function Overview({ userSettings }: { userSettings: UserSettings }) {
+    // Initialize with UTC dates
     const [dateRange, setDateRange] = useState<{from: Date; to: Date}>({
         from: DateToUTCDate(startOfDay(startOfMonth(new Date()))),
         to: DateToUTCDate(endOfDay(new Date()))
@@ -32,6 +33,7 @@ export default function Overview({ userSettings }: { userSettings: UserSettings 
                                 toast.error(`The selected date range is too big. Max allowed range is ${MAX_DATE_RANGE_DAYS} days`)
                                 return
                             }
+                            
                             setDateRange({
                                 from: DateToUTCDate(startOfDay(from)),
                                 to: DateToUTCDate(endOfDay(to))
@@ -41,15 +43,15 @@ export default function Overview({ userSettings }: { userSettings: UserSettings 
             </div>
             <div className="flex flex-col gap-2">
                 <StatsCards
-                    userSettings={ userSettings }
-                    from={ dateRange.from }
-                    to={ dateRange.to }
+                    userSettings={userSettings}
+                    from={dateRange.from}
+                    to={dateRange.to}
                 />
 
                 <CategoriesStats 
-                    userSettings={ userSettings }
-                    from={ dateRange.from }
-                    to={ dateRange.to }
+                    userSettings={userSettings}
+                    from={dateRange.from}
+                    to={dateRange.to}
                 />
             </div>
         </div>

@@ -124,7 +124,6 @@ export default function History({ userSettings }: { userSettings: UserSettings }
                                             axisLine={false}
                                             padding={{ left: 10, right: 10 }}
                                             interval={0}
-                                            angle={-45}
                                             textAnchor="end"
                                         />
                                         

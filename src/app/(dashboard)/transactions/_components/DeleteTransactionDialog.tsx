@@ -1,14 +1,13 @@
 
 "use client"
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
-import { AlertDialogContent } from "@radix-ui/react-alert-dialog"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogContent } from "@/components/ui/alert-dialog"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { DeleteTransaction } from "../_actions/deleteTransaction"
 
 interface Props {
     open: boolean
-    setOpen: (opns: boolean) => void
+    setOpen: (open: boolean) => void
     transactionId: string
 }
 
@@ -25,8 +24,9 @@ export default function DeleteTransactionDialog({ open, setOpen, transactionId }
             await queryClient.invalidateQueries({
                 queryKey: ["transactions"]
             })
+            
+            setOpen(false)
         },
-
         onError: () => {
             toast.error("Something went wrong", {
                 id: transactionId
@@ -39,16 +39,20 @@ export default function DeleteTransactionDialog({ open, setOpen, transactionId }
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                    <AlertDialogDescription>This action cannot be undone. Your transaction will be permanently deleted!</AlertDialogDescription>
+                    <AlertDialogDescription>
+                        This action cannot be undone. Your transaction will be permanently deleted!
+                    </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => {
-                        toast.loading("Deleting transaction..", {
-                            id: transactionId
-                        })
-                        deleteMutation.mutate(transactionId)
-                    }}>
+                    <AlertDialogAction
+                        onClick={() => {
+                            toast.loading("Deleting transaction...", {
+                                id: transactionId
+                            })
+                            deleteMutation.mutate(transactionId)
+                        }}
+                    >
                         Continue
                     </AlertDialogAction>
                 </AlertDialogFooter>
