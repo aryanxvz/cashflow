@@ -1,4 +1,3 @@
-
 "use client"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -66,8 +65,8 @@ export default function History({ userSettings }: { userSettings: UserSettings }
     }
 
     return (
-        <div className="mx-12">
-            <h2 className="mt-12 text-3xl font-bold">History</h2>
+        <div className="mx-10 md:mx-12 pb-12">
+            <h2 className="mt-12 ml-2 mb-2 text-3xl font-bold">History</h2>
             <Card className="col-span-12 mt-2 w-full">
                 <CardHeader className="gap-2">
                     <CardTitle className="grid grid-flow-row justify-between gap-2 md:grid-flow-col">
@@ -78,7 +77,7 @@ export default function History({ userSettings }: { userSettings: UserSettings }
                             setTimeframe={setTimeframe}
                         />
 
-                        <div className="flex h-10 gap-2">
+                        <div className="hidden md:flex h-10 gap-2">
                             <Badge variant="outline" className="flex items-center gap-2 text-sm">
                                 <div className="h-4 w-4 rounded-full bg-emerald-500"></div>
                                 Income
@@ -91,7 +90,7 @@ export default function History({ userSettings }: { userSettings: UserSettings }
                     </CardTitle>
                 </CardHeader>
 
-                <CardContent className="p-6">
+                <CardContent className="p-4 md:p-12">
                     <SkeletonWrapper isLoading={historyDataQuery.isFetching}>
                         {dataAvailable ? (
                             <div className="h-[300px] w-full">
@@ -124,6 +123,9 @@ export default function History({ userSettings }: { userSettings: UserSettings }
                                             tickLine={false}
                                             axisLine={false}
                                             padding={{ left: 10, right: 10 }}
+                                            interval={0}
+                                            angle={-45}
+                                            textAnchor="end"
                                         />
                                         
                                         <YAxis
@@ -183,8 +185,8 @@ export default function History({ userSettings }: { userSettings: UserSettings }
                             </div>
                         ) : (
                             <Card className="flex h-[300px] flex-col items-center justify-center bg-background">
-                                <p className="text-lg font-medium">No data for the selected period</p>
-                                <p className="text-sm text-muted-foreground">
+                                <p className="text-lg font-medium text-center px-4">No data for the selected period</p>
+                                <p className="text-sm text-muted-foreground text-center px-4">
                                     Try selecting a different period or adding new transactions
                                 </p>
                             </Card>

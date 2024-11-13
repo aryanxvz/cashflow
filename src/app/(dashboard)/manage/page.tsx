@@ -17,7 +17,7 @@ export default function page() {
     return (
         <>
             <div className="border-b bg-card">
-                <div className="flex flex-wrap items-center justify-between gap-6 py-8 px-12">
+                <div className="flex flex-wrap items-center justify-between gap-6 py-8 px-10 lg:px-12">
                     <div>
                         <p className="text-3xl font-bold">Manage</p>
                         <p className="text-muted-foreground">Manage your account settings and categories</p>
@@ -25,7 +25,7 @@ export default function page() {
                 </div>
             </div>
 
-            <div className="flex flex-col gap-4 py-4 px-10">
+            <div className="flex flex-col gap-4 py-4 px-10 pb-16">
                 <Card>
                     <CardHeader>
                         <CardTitle>Currency</CardTitle>
@@ -56,7 +56,7 @@ function CategoryList({ type }: { type: TransactionType }) {
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-4">
                             { type === "Expense" ? (
                                 <TrendingDown className="h-12 w-12 items-center rounded-lg bg-red-500/10 text-red-500 p-2" />
                             ) : (
@@ -73,7 +73,9 @@ function CategoryList({ type }: { type: TransactionType }) {
                             trigger = {
                                 <Button className="gap-2 text-sm">
                                     <PlusSquare className="h-4 w-4" />
-                                    Create Category
+                                    <div className="hidden lg:inline">
+                                        Create Category
+                                    </div>
                                 </Button>
                             }
                         />

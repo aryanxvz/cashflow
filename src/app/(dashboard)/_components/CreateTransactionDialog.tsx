@@ -1,4 +1,3 @@
-
 "use client"
 import React, { ReactNode, useCallback, useState } from "react"
 import { TransactionType } from "../../../lib/types"
@@ -82,7 +81,7 @@ export default function CreateTransactionDialog({ trigger, type }: Props){
             <DialogTrigger asChild>
                 {trigger}
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-w-md md:max-w-lg">
                 <DialogHeader>
                     <DialogTitle>
                         Create a new<span className={cn("m-1", type === "Income" ? "text-emerald-500" : "text-red-500")}>
@@ -112,44 +111,42 @@ export default function CreateTransactionDialog({ trigger, type }: Props){
                             </FormItem>
                         )}/>
 
-                        <div className="flex items-center justify-between gap-2">
-                            <FormField control={form.control} name="category" render = {({ field }) => (
-                                <FormItem className="flex flex-col mb-2">
-                                    <FormLabel>Category</FormLabel>
-                                    <FormControl>
-                                        <CategoryPicker type={type} onChange={handleCategoryChange}/>
-                                    </FormControl>
-                                    <FormDescription>Select a category for this transaction</FormDescription>
-                                </FormItem>
-                            )}/>
+                        <FormField control={form.control} name="category" render = {({ field }) => (
+                            <FormItem className="flex flex-col mb-2">
+                                <FormLabel>Category</FormLabel>
+                                <FormControl>
+                                    <CategoryPicker type={type} onChange={handleCategoryChange} />
+                                </FormControl>
+                                <FormDescription>Select a category for this transaction</FormDescription>
+                            </FormItem>
+                        )}/>
 
-                            <FormField control={form.control} name="date" render = {({ field }) => (
-                                <FormItem className="flex flex-col mb-2">
-                                    <FormLabel className="ml-1">Transaction Date</FormLabel>
-                                    <Popover>
-                                        <PopoverTrigger asChild>
-                                            <FormControl>
-                                                <Button variant={"outline"} className={cn("w-[200px] pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
-                                                    {field.value ? (format(field.value, "PPP")): <span>Pick a date</span>}
-                                                    <CalendarIcon className="h-4 w-4 opacity-50 ml-auto"/>
-                                                </Button>
-                                            </FormControl>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-0">
-                                            <Calendar mode="single" selected={field.value} onSelect={(value) => {
-                                                if (!value) return
-                                                field.onChange(value)
-                                            }} initialFocus/>
-                                        </PopoverContent>
-                                    </Popover>
-                                    <FormDescription className="ml-1">Select a date for this transaction</FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )}/>
-                        </div>
+                        <FormField control={form.control} name="date" render = {({ field }) => (
+                            <FormItem className="flex flex-col mb-2">
+                                <FormLabel className="ml-1">Transaction Date</FormLabel>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
+                                                {field.value ? (format(field.value, "PPP")): <span>Pick a date</span>}
+                                                <CalendarIcon className="h-4 w-4 opacity-50 ml-auto"/>
+                                            </Button>
+                                        </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0">
+                                        <Calendar mode="single" selected={field.value} onSelect={(value) => {
+                                            if (!value) return
+                                            field.onChange(value)
+                                        }} initialFocus/>
+                                    </PopoverContent>
+                                </Popover>
+                                <FormDescription className="ml-1">Select a date for this transaction</FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}/>
                     </form>
                 </Form>
-                <DialogFooter>
+                <DialogFooter className="flex justify-between">
                     <DialogClose asChild>
                         <Button type="button" variant={"secondary"} onClick={() => { form.reset() }}>
                             Cancel

@@ -23,7 +23,7 @@ export default function NavBar() {
 function DesktopNavbar() {
     return (
         <div className="border-b border-separate bg-background hidden md:block">
-            <nav className="flex items-center justify-between px-12">
+            <nav className="flex items-center justify-between px-8 lg:px-12">
                 <div className="flex h-[70px] min-h-[60px] items-center gap-x-4">
                     <AppLogo />
                     <div className="flex h-full ml-8">

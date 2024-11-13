@@ -1,4 +1,3 @@
-
 "use client"
 import { UserSettings } from "@prisma/client"
 import { differenceInDays, startOfMonth } from "date-fns"
@@ -16,8 +15,8 @@ export default function Overview({ userSettings }: { userSettings: UserSettings 
     })
 
     return (
-        <>
-            <div className="flex flex-wrap items-end justify-between gap-8 py-4 px-12">
+        <div className="mx-10 md:mx-12">
+            <div className="flex flex-wrap items-end justify-between gap-4 py-4">
                 <h2 className="text-2xl font-bold">Overview</h2>
                 <div className="flex items-center">
                     <DateRangePicker
@@ -36,7 +35,7 @@ export default function Overview({ userSettings }: { userSettings: UserSettings 
                         }}/>
                 </div>
             </div>
-            <div className="flex flex-col mx-12 gap-2">
+            <div className="flex flex-col gap-2">
                 <StatsCards
                     userSettings={ userSettings }
                     from={ dateRange.from }
@@ -49,6 +48,6 @@ export default function Overview({ userSettings }: { userSettings: UserSettings 
                     to={ dateRange.to }
                 />
             </div>
-        </>
+        </div>
     )
 }

@@ -15,7 +15,7 @@ export default function Page() {
     return (
         <>
             <div className="border-b bg-card">
-                <div className="flex flex-wrap items-center justify-between gap-6 py-8 px-12">
+                <div className="flex flex-wrap items-center justify-between gap-6 py-8 px-10 lg:px-12">
                     <div>
                         <p className="text-3xl font-bold">Transactions</p>
                     </div>
@@ -37,7 +37,7 @@ export default function Page() {
                 </div>
             </div>
 
-            <div className="px-12">
+            <div className="px-10 lg:px-12">
                 <TransactionTable from={dateRange.from} to={dateRange.to} />
             </div>
         </>

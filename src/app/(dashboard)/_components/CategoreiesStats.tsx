@@ -57,7 +57,7 @@ function CategoriesCard({ type, formatter, data }: {
     const total = filteredData.reduce((acc, el) => acc + (el._sum?.amount || 0), 0)
 
     return (
-        <Card className="h-80 w-full col-span-6">
+        <Card className="h-60 lg:h-80 w-full col-span-6">
             <CardHeader>
                 <CardTitle className="grid grid-flow-row justify-between px-2 text-gray-900 dark:text-muted-foreground md:grid-flow-col">
                     {type === "Income" ? "Income" : "Expenses"} by category
@@ -66,9 +66,9 @@ function CategoriesCard({ type, formatter, data }: {
 
             <div className="flex items-center justify-center gap-2">
                 {filteredData.length === 0 && (
-                    <div className="flex h-60 w-full flex-col items-center justify-center">
+                    <div className="flex h-40 lg:h-60 w-full flex-col items-center justify-center">
                         No data for the selected period
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-muted-foreground text-center px-4">
                             Try selecting a different period or try adding new{" "}
                             {type === "Income" ? "incomes" : "expenses"}
                         </p>
