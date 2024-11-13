@@ -25,95 +25,99 @@ const emptyData: any[] = []
 
 type TransactionHistoryRow = GetTransactionsHistoryResponseType[0]
 
-const columns: ColumnDef<TransactionHistoryRow>[] = [
-    {
-        accessorKey: "category",
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Category" />
-        ),
-        filterFn: (row, id, value) => {
-            return value.includes(row.getValue(id))
-        },
-        cell: ({ row }) => (
-            <div className="capitalize font-medium min-w-[150px] py-2">
-                {row.original.category}
-            </div>
-        )
-    },
-    {
-        accessorKey: "description",
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Description" />
-        ),
-        cell: ({ row }) => (
-            <div className="capitalize text-sm text-gray-600 dark:text-gray-300 min-w-[200px] py-2">
-                {row.original.description}
-            </div>
-        )
-    },
-    {
-        accessorKey: "date",
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Date" />
-        ),
-        cell: ({ row }) => {
-            const date = new Date(row.original.date)
-            const formattedDate = date.toLocaleDateString("default", {
-                timeZone: "UTC", year: "numeric", month: "2-digit", day: "2-digit"
-            })
-            return <div className="text-sm text-muted-foreground min-w-[150px] whitespace-nowrap py-2">
-                {formattedDate}
-            </div>
-        }
-    },
-    {
-        accessorKey: "type",
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Type" />
-        ),
-        cell: ({ row }) => (
-            <div className={cn("capitalize text-sm font-medium px-3 py-1 rounded-md w-24 min-w-[150px] text-center",
-                row.original.type === "Income" && "bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400",
-                row.original.type === "Expense" && "bg-red-500/10 text-red-600 dark:bg-red-500/20 dark:text-red-400")}>
-                {row.original.type}
-            </div>
-        )
-    },
-    {
-        accessorKey: "amount",
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Amount" />
-        ),
-        cell: ({ row }) => (
-            <div className={cn("text-sm font-semibold whitespace-nowrap py-2 rounded-lg w-32 text-left px-2",
-                row.original.type === "Income" ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"
-            )}>
-                {row.original.formatterdAmount}
-            </div>
-        )
-    },
-    {
-        id: "actions",
-        header: "Actions",
-        enableHiding: false,
-        size: 5,
-        cell: ({ row }) => (
-            <div className="w-8 ml-2">
-                <RowActions transaction={row.original} />
-            </div>
-        ),
-    }
-]
-
 const csvConfig = mkConfig({
     fieldSeparator: ",",
     decimalSeparator: ".",
     useKeysAsHeaders: true
 })
 
-export default function TransactionTable({from, to}: Props) {
+export default function TransactionTable({ from, to }: Props) {
     const [sorting, setSorting] = useState<SortingState>([])
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+
+    const columns: ColumnDef<TransactionHistoryRow>[] = [
+        {
+            accessorKey: "category",
+            header: ({ column }) => (
+                <DataTableColumnHeader column={column} title="Category" />
+            ),
+            filterFn: (row, id, value) => {
+                return value.includes(row.getValue(id))
+            },
+            cell: ({ row }) => (
+                <div className="capitalize font-medium min-w-[150px] py-2">
+                    {row.original.category}
+                </div>
+            )
+        },
+        {
+            accessorKey: "description",
+            header: ({ column }) => (
+                <DataTableColumnHeader column={column} title="Description" />
+            ),
+            cell: ({ row }) => (
+                <div className="capitalize text-sm text-gray-600 dark:text-gray-300 min-w-[200px] py-2">
+                    {row.original.description}
+                </div>
+            )
+        },
+        {
+            accessorKey: "date",
+            header: ({ column }) => (
+                <DataTableColumnHeader column={column} title="Date" />
+            ),
+            cell: ({ row }) => {
+                const date = new Date(row.original.date)
+                const formattedDate = date.toLocaleDateString("default", {
+                    timeZone: "UTC", year: "numeric", month: "2-digit", day: "2-digit"
+                })
+                return <div className="text-sm text-muted-foreground min-w-[150px] whitespace-nowrap py-2">
+                    {formattedDate}
+                </div>
+            }
+        },
+        {
+            accessorKey: "type",
+            header: ({ column }) => (
+                <DataTableColumnHeader column={column} title="Type" />
+            ),
+            cell: ({ row }) => (
+                <div className={cn("capitalize text-sm font-medium px-3 py-1 rounded-md w-24 min-w-[150px] text-center",
+                    row.original.type === "Income" && "bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400",
+                    row.original.type === "Expense" && "bg-red-500/10 text-red-600 dark:bg-red-500/20 dark:text-red-400")}>
+                    {row.original.type}
+                </div>
+            )
+        },
+        {
+            accessorKey: "amount",
+            header: ({ column }) => (
+                <DataTableColumnHeader column={column} title="Amount" />
+            ),
+            cell: ({ row }) => (
+                <div className={cn("text-sm font-semibold whitespace-nowrap py-2 rounded-lg w-32 text-left px-2",
+                    row.original.type === "Income" ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"
+                )}>
+                    {row.original.formatterdAmount}
+                </div>
+            )
+        },
+        {
+            id: "actions",
+            header: "Actions",
+            enableHiding: false,
+            size: 5,
+            cell: ({ row }) => (
+                <div className="w-8 ml-2">
+                    <RowActions 
+                        transaction={row.original}
+                        from={from}  // Pass the from prop
+                        to={to}     // Pass the to prop
+                    />
+                </div>
+            )
+        }
+    ]
 
     const history = useQuery<GetTransactionsHistoryResponseType>({
         queryKey: ["transactions", "history", from, to],
@@ -267,14 +271,24 @@ export default function TransactionTable({from, to}: Props) {
     )
 }
 
-function RowActions({transaction}: {transaction: TransactionHistoryRow}) {
+function RowActions({ transaction, from, to }: { 
+    transaction: TransactionHistoryRow; 
+    from: Date; 
+    to: Date; 
+}) {
     const [showDeleteDialog, setShowDeleteDialog] = useState(false)
     return (
         <>
-        <DeleteTransactionDialog open={showDeleteDialog} setOpen={setShowDeleteDialog} transactionId={transaction.id} />
+            <DeleteTransactionDialog 
+                open={showDeleteDialog} 
+                setOpen={setShowDeleteDialog} 
+                transactionId={transaction.id}
+                fromDate={from}
+                toDate={to}
+            />
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant={"ghost"} className="h-8 p-0 w-8">
+                    <Button variant="ghost" className="h-8 p-0 w-8">
                         <span className="sr-only">Open Menu</span>
                         <MoreHorizontal className="h-4 w-4" />
                     </Button>
@@ -282,10 +296,10 @@ function RowActions({transaction}: {transaction: TransactionHistoryRow}) {
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem className="flex items-center gap-2"
-                        onSelect={() => {
-                            setShowDeleteDialog((prev) => !prev)
-                        }}>
+                    <DropdownMenuItem 
+                        className="flex items-center gap-2"
+                        onSelect={() => setShowDeleteDialog(true)}
+                    >
                         <TrashIcon className="h-4 w-4 text-muted-foreground" />
                         Delete
                     </DropdownMenuItem>

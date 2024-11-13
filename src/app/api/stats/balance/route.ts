@@ -1,7 +1,9 @@
+
 import prisma from "@/lib/prisma";
 import { OverviewQuerySchema } from "@/schema/overview";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { DateToUTCDate, DateToUTCEndOfDay } from "@/lib/helpers";
 
 export async function GET(request:Request) {
     const user = await currentUser()
@@ -20,18 +22,38 @@ export async function GET(request:Request) {
         })
     }
 
+    // Convert to UTC dates with proper day boundaries
+    const fromDate = DateToUTCDate(queryParams.data.from)
+    const toDate = DateToUTCEndOfDay(queryParams.data.to)
+
+    console.log('API Date Range:', {
+        fromDate: fromDate.toISOString(),
+        toDate: toDate.toISOString()
+    });
+
     const stats = await getBalanceStats(
         user.id,
-        queryParams.data.from,
-        queryParams.data.to
+        fromDate,
+        toDate
     )
 
-    return Response.json(stats)
+    return Response.json({
+        ...stats,
+        dateRange: {
+            from: fromDate.toISOString(),
+            to: toDate.toISOString()
+        }
+    })
 }
 
 export type getBalanceStatsResponseType = Awaited<ReturnType<typeof getBalanceStats>>
 
-async function getBalanceStats(userId: string, from: Date,to: Date) {
+async function getBalanceStats(userId: string, from: Date, to: Date) {
+    console.log('Database Query Date Range:', {
+        from: from.toISOString(),
+        to: to.toISOString()
+    });
+
     const total = await prisma.transaction.groupBy({
         by: ["type"],
         where: {
@@ -46,8 +68,12 @@ async function getBalanceStats(userId: string, from: Date,to: Date) {
         }
     })
 
-    return {
+    const result = {
         expense: total.find(t => t.type === "Expense")?._sum.amount || 0,
         income: total.find(t => t.type === "Income")?._sum.amount || 0
-    }
+    };
+
+    console.log('Query Result:', { total, result });
+    
+    return result;
 }
