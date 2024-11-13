@@ -13,7 +13,7 @@ import { ColumnDef, ColumnFiltersState, flexRender, getCoreRowModel, getFiltered
 import { useMemo, useState } from "react"
 import { generateCsv, download, mkConfig } from "export-to-csv"
 import { DownloadIcon, MoreHorizontal, TrashIcon } from "lucide-react"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import DeleteTransactionDialog from "./DeleteTransactionDialog"
 
 interface Props {
@@ -269,25 +269,24 @@ export default function TransactionTable({from, to}: Props) {
 
 function RowActions({transaction}: {transaction: TransactionHistoryRow}) {
     const [showDeleteDialog, setShowDeleteDialog] = useState(false)
-
     return (
         <>
-            <DeleteTransactionDialog open={showDeleteDialog} setOpen={setShowDeleteDialog} transactionId={transaction.id} />
+        <DeleteTransactionDialog open={showDeleteDialog} setOpen={setShowDeleteDialog} transactionId={transaction.id} />
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button 
-                        variant="ghost" 
-                        className="h-8 w-8 p-0 hover:bg-transparent"
-                    >
-                        <MoreHorizontal className="h-4 w-4 text-gray-500" />
+                    <Button variant={"ghost"} className="h-8 p-0 w-8">
+                        <span className="sr-only">Open Menu</span>
+                        <MoreHorizontal className="h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-40">
-                    <DropdownMenuItem 
-                        className="flex items-center gap-2 cursor-pointer text-red-600 dark:text-red-400"
-                        onSelect={() => setShowDeleteDialog(true)}
-                    >
-                        <TrashIcon className="h-4 w-4" />
+                <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem className="flex items-center gap-2"
+                        onSelect={() => {
+                            setShowDeleteDialog((prev) => !prev)
+                        }}>
+                        <TrashIcon className="h-4 w-4 text-muted-foreground" />
                         Delete
                     </DropdownMenuItem>
                 </DropdownMenuContent>
