@@ -2,7 +2,7 @@
 import { DateRangePicker } from "@/components/ui/date-range-picker"
 import { MAX_DATE_RANGE_DAYS } from "@/lib/constant"
 import { differenceInDays, startOfMonth } from "date-fns"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { toast } from "sonner"
 import TransactionTable from "./_components/TransactionTable"
 
@@ -11,6 +11,13 @@ export default function Page() {
         from: startOfMonth(new Date()),
         to: new Date()
     })
+
+    useEffect(() => {
+        console.log('Transaction Page Date Range:', {
+            from: dateRange.from.toISOString(),
+            to: dateRange.to.toISOString()
+        });
+    }, [dateRange]);
 
     return (
         <>
@@ -26,11 +33,19 @@ export default function Page() {
                         onUpdate={(values) => {
                             const { from, to } = values.range
 
-                            if (!from || !to) return
-                            if (differenceInDays(to, from) > MAX_DATE_RANGE_DAYS) {
+                            if (!from || !to) {
+                                console.log('Invalid date range received:', values.range);
+                                return;
+                            }
+                            
+                            const daysDiff = differenceInDays(to, from);
+                            console.log('Date range difference:', daysDiff, 'days');
+                            
+                            if (daysDiff > MAX_DATE_RANGE_DAYS) {
                                 toast.error(`The selected date range is too big. Max allowed range is ${MAX_DATE_RANGE_DAYS} days`)
                                 return
                             }
+                            
                             setDateRange({ from, to })
                         }}
                     />

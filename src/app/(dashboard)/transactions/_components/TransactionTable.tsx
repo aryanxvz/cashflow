@@ -10,7 +10,7 @@ import { DateToUTCDate } from "@/lib/helpers"
 import { cn } from "@/lib/utils"
 import { useQuery } from "@tanstack/react-query"
 import { ColumnDef, ColumnFiltersState, flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, SortingState, useReactTable } from "@tanstack/react-table"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { generateCsv, download, mkConfig } from "export-to-csv"
 import { DownloadIcon, MoreHorizontal, TrashIcon } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
@@ -34,6 +34,34 @@ const csvConfig = mkConfig({
 export default function TransactionTable({ from, to }: Props) {
     const [sorting, setSorting] = useState<SortingState>([])
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+
+    useEffect(() => {
+        console.log('TransactionTable Dates:', {
+            originalFrom: from.toISOString(),
+            originalTo: to.toISOString(),
+            utcFrom: DateToUTCDate(from).toISOString(),
+            utcTo: DateToUTCDate(to).toISOString(),
+        });
+    }, [from, to]);
+
+    const history = useQuery<GetTransactionsHistoryResponseType>({
+        queryKey: ["transactions", "history", from.toISOString(), to.toISOString()],
+        queryFn: async () => {
+            const fromUTC = DateToUTCDate(from);
+            const toUTC = DateToUTCDate(to);
+            
+            const url = `/api/transaction-history?from=${fromUTC.toISOString()}&to=${toUTC.toISOString()}`;
+            console.log('Fetching transactions with URL:', url);
+            
+            const res = await fetch(url);
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+            const data = await res.json();
+            console.log('Transaction Response:', data);
+            return data;
+        }
+    })
 
     const columns: ColumnDef<TransactionHistoryRow>[] = [
         {
@@ -118,11 +146,6 @@ export default function TransactionTable({ from, to }: Props) {
             )
         }
     ]
-
-    const history = useQuery<GetTransactionsHistoryResponseType>({
-        queryKey: ["transactions", "history", from, to],
-        queryFn: () => fetch(`/api/transaction-history?from=${DateToUTCDate(from)}&to=${DateToUTCDate(to)}`).then((res) => res.json())
-    })
 
     const handleExportCSV = (data: any[]) => {
         const csv = generateCsv(csvConfig)(data)
