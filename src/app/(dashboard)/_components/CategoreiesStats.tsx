@@ -9,7 +9,7 @@ import { DateToUTCDate, GetFormatterForCurrency } from "@/lib/helpers"
 import { TransactionType } from "@/lib/types"
 import { UserSettings } from "@prisma/client"
 import { useQuery } from "@tanstack/react-query"
-import { useMemo } from "react"
+import { useMemo, useEffect } from "react"
 
 interface Props {
     from: Date
@@ -18,9 +18,32 @@ interface Props {
 }
 
 export default function CategoriesStats({ userSettings, from, to }: Props) {
+    useEffect(() => {
+        console.log('CategoriesStats Dates:', {
+            originalFrom: from.toISOString(),
+            originalTo: to.toISOString(),
+            utcFrom: DateToUTCDate(from).toISOString(),
+            utcTo: DateToUTCDate(to).toISOString(),
+        });
+    }, [from, to]);
+
     const statsQuery = useQuery<getCategoriesStatsResponseType>({
-        queryKey: ["overview", "stats", "categories", from, to],
-        queryFn: () => fetch(`/api/stats/categories?from=${DateToUTCDate(from)}&to=${DateToUTCDate(to)}`).then((res) => res.json())
+        queryKey: ["overview", "stats", "categories", from.toISOString(), to.toISOString()],
+        queryFn: async () => {
+            const fromUTC = DateToUTCDate(from);
+            const toUTC = DateToUTCDate(to);
+            
+            const url = `/api/stats/categories?from=${fromUTC.toISOString()}&to=${toUTC.toISOString()}`;
+            console.log('Fetching categories with URL:', url);
+            
+            const res = await fetch(url);
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+            const data = await res.json();
+            console.log('Categories Response:', data);
+            return data;
+        }
     })
 
     const formatter = useMemo(() => {
