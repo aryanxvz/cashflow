@@ -140,57 +140,52 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
   const getPresetRange = (presetName: string): DateRange => {
     const preset = PRESETS.find(({ name }) => name === presetName)
     if (!preset) throw new Error(`Unknown date range preset: ${presetName}`)
-    const from = new Date()
-    const to = new Date()
-    const first = from.getDate() - from.getDay()
+    
+    // Create dates at the start of the day
+    const now = new Date()
+    now.setHours(0, 0, 0, 0)
+    
+    const from = new Date(now)
+    const to = new Date(now)
 
     switch (preset.name) {
       case 'today':
-        from.setHours(0, 0, 0, 0)
         to.setHours(23, 59, 59, 999)
         break
       case 'yesterday':
         from.setDate(from.getDate() - 1)
-        from.setHours(0, 0, 0, 0)
         to.setDate(to.getDate() - 1)
         to.setHours(23, 59, 59, 999)
         break
       case 'last7':
         from.setDate(from.getDate() - 6)
-        from.setHours(0, 0, 0, 0)
         to.setHours(23, 59, 59, 999)
         break
       case 'last14':
         from.setDate(from.getDate() - 13)
-        from.setHours(0, 0, 0, 0)
         to.setHours(23, 59, 59, 999)
         break
       case 'last30':
         from.setDate(from.getDate() - 29)
-        from.setHours(0, 0, 0, 0)
         to.setHours(23, 59, 59, 999)
         break
       case 'thisWeek':
-        from.setDate(first)
-        from.setHours(0, 0, 0, 0)
+        from.setDate(from.getDate() - from.getDay())
         to.setHours(23, 59, 59, 999)
         break
       case 'lastWeek':
-        from.setDate(from.getDate() - 7 - from.getDay())
+        from.setDate(from.getDate() - from.getDay() - 7)
         to.setDate(to.getDate() - to.getDay() - 1)
-        from.setHours(0, 0, 0, 0)
         to.setHours(23, 59, 59, 999)
         break
       case 'thisMonth':
         from.setDate(1)
-        from.setHours(0, 0, 0, 0)
         to.setHours(23, 59, 59, 999)
         break
       case 'lastMonth':
-        from.setMonth(from.getMonth() - 1)
         from.setDate(1)
-        from.setHours(0, 0, 0, 0)
-        to.setDate(0)
+        from.setMonth(from.getMonth() - 1)
+        to.setDate(0) // Last day of previous month
         to.setHours(23, 59, 59, 999)
         break
     }
