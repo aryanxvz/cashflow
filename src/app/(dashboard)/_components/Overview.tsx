@@ -17,7 +17,7 @@ export default function Overview({ userSettings }: { userSettings: UserSettings 
     })
 
     return (
-        <div className="mx-10 md:mx-12">
+        <div className="mx-8 md:mx-12">
             <div className="flex flex-wrap items-end justify-between gap-4 py-4">
                 <h2 className="text-2xl font-bold">Overview</h2>
                 <div className="flex items-center">
